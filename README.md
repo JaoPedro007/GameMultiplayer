@@ -1,3 +1,4 @@
 # GameMultiplayer
 ## Game Multiplayer pixelated
-### npx serve to run
+### Node v20.12.2 must to be used
+### npx nodemon to run

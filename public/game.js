@@ -84,13 +84,12 @@ export default function createGame(){
         const fruitId = command.fruitId
 
         delete state.fruits[fruitId]
-
+        
         notifyAll({
             type: 'remove-fruit',
             fruitId: fruitId
         })
     }
-
 
     function movePlayer(command){
         notifyAll(command)
@@ -137,10 +136,18 @@ export default function createGame(){
 
                 if(player.x === fruit.x && player.y === fruit.y){
                     removeFruit({fruitId})
+
+                    player.score = player.score ? player.score + 1 : 1
                 }
             }
         
         
+    }
+
+    function SoundCollectFruit(fruitSound){
+        fruitSound.currentTime = 0;
+        fruitSound.volume=0.1
+        fruitSound.play()
     }
 
     return{
@@ -152,6 +159,7 @@ export default function createGame(){
         setState,
         subscribe,
         start,
+        SoundCollectFruit,
         state
     }
 }

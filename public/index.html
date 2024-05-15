@@ -4,6 +4,10 @@
     <title>Game Multiplayer</title>
 
     <style>
+
+        #container {
+                    display: flex;
+        }
         #screen{
             border:10px solid #CCC;
             image-rendering: pixelated;
@@ -12,23 +16,34 @@
             width: 800px;
             height: 800px;
         }
+        #score{
+            border: 10px solid #8b8b8b;
+            width: 400px;
+            height: 800px;
+            box-sizing: border-box;
+        }
     </style>
     <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
 
-    <canvas id="screen" width="10" height="10"></canvas>
+    <div id="container">
+        <canvas id="screen" width="10" height="10"></canvas>
+        <div id="score"></div>
+        <audio id="FruitSound">
+            <source src="sounds/collect-points.mp3">
+        </audio>
+    </div>
+
     
     <script type="module">
         import createKeyboardListener from './keyboard-listener.js'
         import createGame from './game.js'
         import renderScreen from './render-screen.js'
+        import renderScore from './render-score.js' 
 
         const game = createGame()
-        const keyboardListener = createKeyboardListener(document)
-        
-        
-        
+        const keyboardListener = createKeyboardListener(document) 
         const socket = io()
         
         socket.on('connect', () => {
@@ -49,6 +64,8 @@
             keyboardListener.subscribe((command) => {
                 socket.emit('move-player', command)
             })
+            const canvasScore = document.getElementById('score')
+            renderScore(canvasScore, game, requestAnimationFrame, playerId)
         })
 
         socket.on ('add-player', (command) =>{
@@ -77,8 +94,11 @@
         socket.on('remove-fruit', (command) =>{
             console.log(`Receiving ${command.type} -> ${command.fruitId}`)
             game.removeFruit(command)
-        })  
 
+            const fruitSound = document.getElementById('FruitSound')
+            game.SoundCollectFruit(fruitSound)      
+
+        })
     </script>
 </body>
 </html>
